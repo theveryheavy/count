@@ -1,0 +1,140 @@
+<html>
+<head>
+	<title>Counter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        body {
+            font-family: 'Roboto Mono', monospace;
+            user-select: none; /* Disable text selection */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-in {
+            animation: fadeIn 2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-purple-300">
+    <div class="flex flex-col items-center justify-center min-h-screen">
+        <div class="text-6xl font-bold text-purple-500 mb-4 fade-in">is-a.dev</div>
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-3/4 fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Subdomains</div>
+                    <div id="subdomain-count" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Stars</div>
+                    <div id="star-count" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Forks</div>
+                    <div id="fork-count" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Open Issues</div>
+                    <div id="issue-count" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Subscribers</div>
+                    <div id="subscriber-count" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Box -->
+        <div class="text-6xl font-bold text-purple-500 mt-8 mb-4 fade-in">part-of.my.id</div>
+        <div class="bg-gray-800 p-8 mt-4 rounded-lg shadow-lg w-3/4 fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Subdomains</div>
+                    <div id="subdomain-count-alt" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Stars</div>
+                    <div id="star-count-alt" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Forks</div>
+                    <div id="fork-count-alt" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Open Issues</div>
+                    <div id="issue-count-alt" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Subscribers</div>
+                    <div id="subscriber-count-alt" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="absolute top-4 right-4">
+        <a href="https://github.com/theveryheavy/count" target="_blank" class="text-purple-500 hover:text-purple-300">
+            <i class="fab fa-github fa-2x"></i>
+        </a>
+    </div>
+    <script>
+        async function fetchCounts() {
+            try {
+                // Fetch data for is-a-dev
+                const subdomainResponse = await fetch('https://raw-api.is-a.dev/');
+                const subdomainData = await subdomainResponse.json();
+                const subdomainCount = subdomainData.length;
+
+                const githubResponse = await fetch('https://api.github.com/repos/is-a-dev/register');
+                const githubData = await githubResponse.json();
+
+                // Fetch data for partofmyid
+                const subdomainResponseAlt = await fetch('https://partofmyid-api.satr14.my.id/query/count');
+                const subdomainDataAlt = await subdomainResponseAlt.json();
+                const subdomainCountAlt = subdomainDataAlt.count;
+
+                const githubResponseAlt = await fetch('https://api.github.com/repos/partofmyid/register');
+                const githubDataAlt = await githubResponseAlt.json();
+
+                // Update counters for is-a-dev
+                animateCounter(document.getElementById('subdomain-count'), subdomainCount);
+                animateCounter(document.getElementById('star-count'), githubData.stargazers_count);
+                animateCounter(document.getElementById('fork-count'), githubData.forks_count);
+                animateCounter(document.getElementById('issue-count'), githubData.open_issues_count);
+                animateCounter(document.getElementById('subscriber-count'), githubData.subscribers_count);
+
+                // Update counters for partofmyid
+                animateCounter(document.getElementById('subdomain-count-alt'), subdomainCountAlt);
+                animateCounter(document.getElementById('star-count-alt'), githubDataAlt.stargazers_count);
+                animateCounter(document.getElementById('fork-count-alt'), githubDataAlt.forks_count);
+                animateCounter(document.getElementById('issue-count-alt'), githubDataAlt.open_issues_count);
+                animateCounter(document.getElementById('subscriber-count-alt'), githubDataAlt.subscribers_count);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.querySelectorAll('div[id$="-count"]').forEach(el => el.innerText = 'Error');
+            }
+        }
+
+        function animateCounter(element, target) {
+            let count = 0;
+            const speed = Math.max(10, Math.floor(target / 200));
+            const increment = Math.ceil(target / 100);
+
+            const updateCounter = () => {
+                count += increment;
+                if (count >= target) {
+                    element.innerText = target;
+                } else {
+                    element.innerText = count;
+                    setTimeout(updateCounter, speed);
+                }
+            };
+
+            updateCounter();
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchCounts);
+    </script>
+</body>
+</html>
