@@ -1,13 +1,13 @@
 <html>
 <head>
-	<title>Counter</title>
+    <title>Counter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
         body {
             font-family: 'Roboto Mono', monospace;
-            user-select: none; /* Disable text selection */
+            user-select: none;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -19,10 +19,11 @@
     </style>
 </head>
 <body class="bg-gray-900 text-purple-300">
-    <div class="flex flex-col items-center justify-center min-h-screen">
-        <div class="text-6xl font-bold text-purple-500 mb-4 fade-in">is-a.dev</div>
-        <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-3/4 fade-in">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+    <div class="flex flex-col items-center justify-start min-h-screen py-8">
+        <!-- Section for is-a.dev -->
+        <div class="text-6xl font-bold text-purple-500 mb-8 fade-in">is-a.dev</div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-5xl fade-in">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
                 <div class="flex flex-col items-center">
                     <div class="text-2xl font-bold text-purple-400 mb-2">Subdomains</div>
                     <div id="subdomain-count" class="text-4xl font-bold text-purple-200">0</div>
@@ -46,10 +47,37 @@
             </div>
         </div>
 
-        <!-- New Box -->
-        <div class="text-6xl font-bold text-purple-500 mt-8 mb-4 fade-in">part-of.my.id</div>
-        <div class="bg-gray-800 p-8 mt-4 rounded-lg shadow-lg w-3/4 fade-in">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <!-- Section for is-a-good.dev -->
+        <div class="text-6xl font-bold text-purple-500 mt-16 mb-8 fade-in">is-a-good.dev</div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-5xl fade-in">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Subdomains</div>
+                    <div id="subdomain-count-alt1" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Stars</div>
+                    <div id="star-count-alt1" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Forks</div>
+                    <div id="fork-count-alt1" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Open Issues</div>
+                    <div id="issue-count-alt1" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl font-bold text-purple-400 mb-2">Subscribers</div>
+                    <div id="subscriber-count-alt1" class="text-4xl font-bold text-purple-200">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section for part-of.my.id -->
+        <div class="text-6xl font-bold text-purple-500 mt-16 mb-8 fade-in">part-of.my.id</div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-5xl fade-in">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
                 <div class="flex flex-col items-center">
                     <div class="text-2xl font-bold text-purple-400 mb-2">Subdomains</div>
                     <div id="subdomain-count-alt" class="text-4xl font-bold text-purple-200">0</div>
@@ -73,6 +101,7 @@
             </div>
         </div>
     </div>
+
     <div class="absolute top-4 right-4">
         <a href="https://github.com/theveryheavy/count" target="_blank" class="text-purple-500 hover:text-purple-300">
             <i class="fab fa-github fa-2x"></i>
@@ -97,6 +126,19 @@
                 const githubResponseAlt = await fetch('https://api.github.com/repos/partofmyid/register');
                 const githubDataAlt = await githubResponseAlt.json();
 
+				// Fetch data for is-a-good-dev from GitHub
+				const githubFilesResponse = await fetch('https://api.github.com/repos/is-a-good-dev/register/contents/domains');
+				const githubFilesData = await githubFilesResponse.json();
+
+				// Count JSON files in the "domains" folder
+				const jsonFilesCount = githubFilesData.filter(file => file.name.endsWith('.json')).length;
+
+				// Add 9 as reserved
+				const subdomainCountAlt1 = jsonFilesCount + 9;
+
+				const githubResponseAlt1 = await fetch('https://api.github.com/repos/is-a-good-dev/register');
+				const githubDataAlt1 = await githubResponseAlt1.json();		
+				
                 // Update counters for is-a-dev
                 animateCounter(document.getElementById('subdomain-count'), subdomainCount);
                 animateCounter(document.getElementById('star-count'), githubData.stargazers_count);
@@ -110,6 +152,15 @@
                 animateCounter(document.getElementById('fork-count-alt'), githubDataAlt.forks_count);
                 animateCounter(document.getElementById('issue-count-alt'), githubDataAlt.open_issues_count);
                 animateCounter(document.getElementById('subscriber-count-alt'), githubDataAlt.subscribers_count);
+				
+				// Update counters for is-a-good-dev
+				animateCounter(document.getElementById('subdomain-count-alt1'), subdomainCountAlt1);
+				animateCounter(document.getElementById('star-count-alt1'), githubDataAlt1.stargazers_count);
+				animateCounter(document.getElementById('fork-count-alt1'), githubDataAlt1.forks_count);
+				animateCounter(document.getElementById('issue-count-alt1'), githubDataAlt1.open_issues_count);
+				animateCounter(document.getElementById('subscriber-count-alt1'), githubDataAlt1.subscribers_count);
+
+                
             } catch (error) {
                 console.error('Error fetching data:', error);
                 document.querySelectorAll('div[id$="-count"]').forEach(el => el.innerText = 'Error');
